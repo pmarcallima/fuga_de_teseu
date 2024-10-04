@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 100000f;
+    public float moveSpeed = 15f;
     private Vector2 moveDirection;
     private Rigidbody2D rb;
 
@@ -31,12 +31,6 @@ public class PlayerMovement : MonoBehaviour
            if (moveDirection.x != 0) 
         {
             spriteRenderer.flipX = moveDirection.x < 0; 
-        }
-
-        if (moveDirection.y != 0) 
-        {
-            
-            spriteRenderer.flipY = moveDirection.y > 0; 
         }
         
         
