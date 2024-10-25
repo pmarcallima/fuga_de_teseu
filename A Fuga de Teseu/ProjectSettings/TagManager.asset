@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Teseu
   - Olho
+  - Coin
+  - Floor
+  - Exit
   layers:
   - Default
   - TransparentFX
@@ -15,8 +18,8 @@ TagManager:
   - Water
   - UI
   - Wall
-  - 
-  - 
+  - Minotauro
+  - Item
   - 
   - 
   - 
