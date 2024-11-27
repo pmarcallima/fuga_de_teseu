@@ -9,7 +9,7 @@ public class LevelChange0203 : MonoBehaviour
         if (collision.gameObject.name == "invisibleExit")
         {
             // Troca a cena para "Labirinto-03"
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Labirinto-03");
         }
     }
 }
