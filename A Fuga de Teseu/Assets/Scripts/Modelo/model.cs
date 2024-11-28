@@ -64,5 +64,5 @@ public class LogisticRegressionModel
     {
         double linearModel = bias + x.Zip(weights, (xi, wi) => xi * wi).Sum();
         return Sigmoid(linearModel);
-    }
+    }
 }

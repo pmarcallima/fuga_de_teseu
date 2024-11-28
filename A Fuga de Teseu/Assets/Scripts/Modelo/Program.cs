@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,16 +9,33 @@ public class LogisticRegression : MonoBehaviour
 {
     static private string projectPath = Application.dataPath;
     private string trainFilePath = projectPath + @"\Scripts\dados.csv";  
-    private string testFilePath = projectPath + @"\Scripts\dados_player.csv"; 
+    public string testFilePath = projectPath + @"\Scripts\dados_player.csv"; 
 
-    private LogisticRegressionModel model; 
-    private double[] minValues;              
-     private double[] maxValues;          
+    private static LogisticRegressionModel model;  // Tornando o modelo estático para persistir durante a execução
+    private static double[] minValues;              // Também tornando os valores de normalização estáticos
+    private static double[] maxValues;              
+
+    // Variável estática para garantir que o treinamento ocorra apenas uma vez
+    private static bool isModelTrained = false;
+
+void Awake()
+    {
+        // Impede que o GameObject com este script seja destruído ao carregar uma nova cena
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {
-        Debug.Log("Iniciando treinamento do modelo...");
-        TrainModel(trainFilePath);
+        if (!isModelTrained)  // Verifica se o modelo já foi treinado
+        {
+            Debug.Log("Iniciando treinamento do modelo...");
+            TrainModel(trainFilePath);
+            isModelTrained = true;  // Marca o modelo como treinado
+        }
+        else
+        {
+            Debug.Log("Modelo já treinado, realizando previsões...");
+        }
 
         Debug.Log("Realizando previsões...");
         PredictFromFile(testFilePath);
@@ -39,14 +56,12 @@ public class LogisticRegression : MonoBehaviour
         // Normalizar as features de treinamento
         (minValues, maxValues) = NormalizeFeatures(X_train);
 
-
         model = new LogisticRegressionModel(X_train[0].Length);
-        model.Train(X_train, y_train, epochs: 10000, learningRate: 0.1);
+        model.Train(X_train, y_train, epochs: 1000, learningRate: 0.1);
         Debug.Log("Modelo treinado com sucesso.");
     }
 
-
-    private void PredictFromFile(string testFilePath)
+    public void PredictFromFile(string testFilePath)
     {
         // Verificar se o modelo foi treinado
         if (model == null)
@@ -64,7 +79,7 @@ public class LogisticRegression : MonoBehaviour
             return;
         }
 
- 
+        // Normalizar os dados de teste com os valores mínimos e máximos obtidos no treinamento
         NormalizeFeatures(X_test, minValues, maxValues);
 
         // Realizar previsões
@@ -176,4 +191,3 @@ public class LogisticRegression : MonoBehaviour
         }
     }
 }
-
