@@ -10,6 +10,7 @@ TagManager:
   - Coin
   - Floor
   - Exit
+  - WIN
   layers:
   - Default
   - TransparentFX

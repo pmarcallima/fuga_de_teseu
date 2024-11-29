@@ -10,7 +10,7 @@ public class CollisionTeseuEnemy : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Enemy") {
             Destroy(gameObject);
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("GameOverScene");
         }
     }
 }

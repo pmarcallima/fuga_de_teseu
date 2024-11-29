@@ -9,7 +9,7 @@ public class LevelChangeFim : MonoBehaviour
         if (collision.gameObject.name == "invisibleExit")
         {
             // Troca a cena para o menu final
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("WinScene");
         }
     }
 }
