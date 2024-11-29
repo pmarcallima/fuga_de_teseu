@@ -179,10 +179,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Desenvolvedores:\n\t\tFabio Andrade\n\t\tGabriel Samarane\n\t\tGuilherme
-    De Brites\n\t\tJoao madeira\n\t\tJoao Lucas Curi\n\t\tLucas Alkmim\n\t\tPedro
-    Ribeiro\n\t\tPedro Marcal\n\nSprites -> Miguel Ribeiro Maia\nTilesSet -> Mushra
-    Games"
+  m_text: "Desenvolvedores:\t\tProfessores:\nFabio Andrade\t\tArtur Mol\nGabriel
+    Samarane\t\tCristiane Nobre\nGuilherme De Brites\t\tCristiano Rodrigues\nJoao
+    Madeira\t\tRosilane da Mota\nJoao Lucas Curi\nLucas Alkmim\nPedro Ribeiro\nPedro
+    Marcal\n\nSprites -> Miguel Ribeiro Maia\nTilesSet -> Mushra Games"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -307,7 +307,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529faf2d3f1206f41845b62b5903507f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
- 
+  testFilePath: C:/Users/Pedro/Documents/PUC/TI4/Fuga de Teseu/fuga_de_teseu/A Fuga
+    de Teseu/Assets/StreamingAssets\dados_player.csv
 --- !u!1 &86866758
 GameObject:
   m_ObjectHideFlags: 0
