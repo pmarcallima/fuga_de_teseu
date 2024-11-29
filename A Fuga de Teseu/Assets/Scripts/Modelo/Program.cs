@@ -61,13 +61,14 @@ void Awake()
         Debug.Log("Modelo treinado com sucesso.");
     }
 
-    public void PredictFromFile(string testFilePath)
+    public int PredictFromFile(string testFilePath)
     {
+int predictedClass = -1;
         // Verificar se o modelo foi treinado
         if (model == null)
         {
             Debug.LogError("Erro: o modelo não foi treinado. Não é possível realizar previsões.");
-            return;
+            return -1;
         }
 
         var X_test = ReadCsvWithoutLabels(testFilePath);
@@ -76,19 +77,20 @@ void Awake()
         if (X_test.Length == 0 || X_test[0].Length == 0)
         {
             Debug.LogError("Erro: os dados de teste estão vazios ou com formato incorreto.");
-            return;
+            return -1;
         }
 
         // Normalizar os dados de teste com os valores mínimos e máximos obtidos no treinamento
         NormalizeFeatures(X_test, minValues, maxValues);
-
+ 
         // Realizar previsões
         for (int i = 0; i < X_test.Length; i++)
         {
             double prediction = model.Predict(X_test[i]);
-            int predictedClass = prediction >= 0.5 ? 1 : 0;
+            predictedClass = prediction >= 0.5 ? 1 : 0;
             Debug.Log($"Entrada: {string.Join(", ", X_test[i])} | Probabilidade: {prediction:F4} | Classe: {predictedClass}");
         }
+ 	return predictedClass;
     }
 
     // Função para ler os dados de treinamento (com rótulos)
