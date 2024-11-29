@@ -1,7 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
-using System.Collections.Generic;  // Para usar Queue
-using System.Collections;  // Necessário para corrotinas
+using UnityEngine.Rendering.Universal;
 
 public class ItemGenerator : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class ItemGenerator : MonoBehaviour
     public Transform objetivoFinal;
     public Grid grid;
     public AstarPath astarPath;
-    public float raioGeracao = 1f;  // Raio reduzido para gerar itens mais rápido
+    public float raioGeracao = 1f; // Raio reduzido para gerar itens mais rápido
     public int maxItems = 10;
     public float intervaloGeracao = 5f;
     public float intervaloTentativa = 1f; // Intervalo de tempo entre tentativas de gerar uma célula válida
@@ -18,27 +19,20 @@ public class ItemGenerator : MonoBehaviour
 
     private Transform jogador;
     private int itemsGerados = 0;
-    private float tempoUltimaGeracao = 0f;
-
-    private float minotauroRaioSeguranca = 0f;
-
- 
-
     private bool gerandoItens = false;
+    private Seeker seeker; // Declaração da variável seeker
 
     void Start()
     {
-	 GameObject obj = GameObject.Find("JoaoMadeira");
+        GameObject obj = GameObject.Find("JoaoMadeira");
 
         if (obj != null)
         {
-            // Acessa o script JoaoMadeira do GameObject
             LogisticRegression lr = obj.GetComponent<LogisticRegression>();
 
             if (lr != null)
             {
-                // Chama a função dentro do script JoaoMadeira
-                 label = lr.PredictFromFile(lr.testFilePath);
+                label = lr.PredictFromFile(lr.testFilePath);
             }
             else
             {
@@ -49,12 +43,18 @@ public class ItemGenerator : MonoBehaviour
         {
             Debug.Log("O GameObject JoaoMadeira não está na cena.");
         }
-    
+
         jogador = GameObject.FindWithTag("Teseu").transform;
 
         if (astarPath == null)
         {
             astarPath = AstarPath.active;
+        }
+
+        seeker = GetComponent<Seeker>(); // Inicializa o seeker
+        if (seeker == null)
+        {
+            Debug.LogError("O componente Seeker não está anexado a este GameObject.");
         }
 
         Debug.Log("Iniciando ItemGenerator. Jogador encontrado: " + jogador.name);
@@ -64,109 +64,112 @@ public class ItemGenerator : MonoBehaviour
     {
         if (itemsGerados < maxItems && !gerandoItens)
         {
-            Debug.Log("Iniciando geração de itens. Itens gerados: " + itemsGerados);
             StartCoroutine(GerarItensPertoDoJogador());
         }
     }
 
- IEnumerator GerarItensPertoDoJogador()
-{
-    gerandoItens = true;
-    Debug.Log("Corrotina de geração de itens iniciada.");
-
-    GridGraph gridGraph = astarPath.graphs[0] as GridGraph;
-
-    if (gridGraph == null)
+    IEnumerator GerarItensPertoDoJogador()
     {
-        Debug.LogError("GridGraph não encontrado.");
-        yield break;
-    }
+        gerandoItens = true;
 
-    // Tentativa de gerar células válidas ao longo do tempo
-    while (itemsGerados < maxItems)
-    {
-        // Atualize a posição do jogador a cada iteração da corrotina
-        Vector3 jogadorPos = jogador.position;
-        Vector3Int cellPos = grid.WorldToCell(jogadorPos);
+        GridGraph gridGraph = astarPath.graphs[0] as GridGraph;
 
-        // Agora gera uma célula aleatória com base na posição atual do jogador
-        Vector3Int celulaAleatoria = GerarCelulaAleatoria(cellPos);
-
-        if (celulaAleatoria == Vector3Int.zero)
+        if (gridGraph == null)
         {
-            Debug.LogError("Não foi possível gerar uma célula aleatória válida.");
-            yield return new WaitForSeconds(intervaloTentativa); // Espera antes de tentar novamente
-            continue; // Tenta novamente após o intervalo
+            Debug.LogError("GridGraph não encontrado.");
+            yield break;
         }
 
-        Vector3 worldPosition = grid.CellToWorld(celulaAleatoria);
-        GraphNode node = gridGraph.GetNearest(worldPosition).node;
-
-        if (node != null && node.Walkable)
+        while (itemsGerados < maxItems)
         {
-            Debug.Log("Gerando item na posição: " + worldPosition);
-            GerarItem(worldPosition);
-            itemsGerados++;
-            tempoUltimaGeracao = Time.time;
-            yield return new WaitForSeconds(intervaloGeracao); // Espera entre as gerações de itens
+            Vector3 jogadorPos = jogador.position;
+            Vector3Int cellPos = grid.WorldToCell(jogadorPos);
+
+            Vector3Int celulaAleatoria = GerarCelulaAleatoria(cellPos);
+
+            if (celulaAleatoria == Vector3Int.zero)
+            {
+                Debug.LogError("Não foi possível gerar uma célula aleatória válida.");
+                yield return new WaitForSeconds(intervaloTentativa);
+                continue;
+            }
+
+            Vector3 worldPosition = grid.CellToWorld(celulaAleatoria);
+
+            if (ExisteCaminho(jogador.position, worldPosition))
+            {
+                // Calculando a chance de geração baseada na label
+                float chanceDeGerar = CalcularChanceDeGerar(label);
+                if (Random.value <= chanceDeGerar)  // A geração ocorre se a chance for cumprida
+                {
+                    GerarItem(worldPosition);
+                    itemsGerados++;
+                }
+                else
+                {
+                    Debug.Log("Chance não cumprida, tentando novamente.");
+                }
+
+                yield return new WaitForSeconds(intervaloGeracao);
+            }
+            else
+            {
+                Debug.Log("Caminho inválido. Tentando novamente.");
+                yield return new WaitForSeconds(intervaloTentativa);
+            }
         }
-        else
+
+        gerandoItens = false;
+    }
+
+    bool ExisteCaminho(Vector3 start, Vector3 end)
+    {
+        if (seeker == null)
         {
-            Debug.Log("Célula aleatória não é válida (não caminhável). Tentando novamente.");
-            yield return new WaitForSeconds(intervaloTentativa); // Espera antes de tentar novamente
+            Debug.LogError("Seeker não foi inicializado.");
+            return false;
         }
+
+        Path path = seeker.StartPath(start, end, null);
+        AstarPath.BlockUntilCalculated(path);
+
+        if (path.error)
+        {
+            Debug.LogWarning("Não há caminho até o destino.");
+            return false;
+        }
+
+        return true;
     }
 
-    Debug.Log("Itens gerados: " + itemsGerados);
-    gerandoItens = false;
-}
-
-   Vector3Int GerarCelulaAleatoria(Vector3Int jogadorPos)
-{
-    GridGraph gridGraph = astarPath.graphs[0] as GridGraph;
-
-    if (gridGraph == null)
+    Vector3Int GerarCelulaAleatoria(Vector3Int jogadorPos)
     {
-        Debug.LogError("GridGraph não encontrado.");
-        return Vector3Int.zero;
-    }
+        GridGraph gridGraph = astarPath.graphs[0] as GridGraph;
 
-    // Obter os limites do grid
-    int gridWidth = gridGraph.width;
-    int gridHeight = gridGraph.depth;
+        if (gridGraph == null)
+        {
+            Debug.LogError("GridGraph não encontrado.");
+            return Vector3Int.zero;
+        }
 
-    // Gerar um ponto aleatório dentro do raio
-    int xAleatorio = Random.Range(jogadorPos.x - (int)raioGeracao, jogadorPos.x + (int)raioGeracao);
-    int yAleatorio = Random.Range(jogadorPos.y - (int)raioGeracao, jogadorPos.y + (int)raioGeracao);
-    Debug.Log("xAleatorio: " + xAleatorio + ", yAleatorio: " + yAleatorio);
-    Debug.Log("Posição do Jogador X: " + jogadorPos.x);
-    Debug.Log("Raio de Geração: " + raioGeracao);
+        int gridWidth = gridGraph.width;
+        int gridHeight = gridGraph.depth;
 
+        int xAleatorio = Random.Range(jogadorPos.x - (int)raioGeracao, jogadorPos.x + (int)raioGeracao);
+        int yAleatorio = Random.Range(jogadorPos.y - (int)raioGeracao, jogadorPos.y + (int)raioGeracao);
 
+        if (xAleatorio < -48.188319 || xAleatorio >= 51.811681 || yAleatorio < -27.53517  || yAleatorio >= 72.46483)
+        {
+            return Vector3Int.zero;
+        }
 
-    // Verificar se está dentro do limite do grid
-    if (xAleatorio < 0 || xAleatorio >= gridWidth || yAleatorio < 0 || yAleatorio >= gridHeight)
-    {
-        return Vector3Int.zero; // Se fora do grid, retorna Vector3Int.zero como sinal de erro
-    }
-
-    return new Vector3Int(xAleatorio, yAleatorio, 0);
-}
-
-
-    float CalcularDificuldade(float distMinotauro, float distObjetivo)
-    {
-        return (distMinotauro + distObjetivo) / 100;
-    }
-
-    bool ShouldGenerateItem(float fatorDificuldade)
-    {
-        return fatorDificuldade < 10f;
+        return new Vector3Int(xAleatorio, yAleatorio, 0);
     }
 
     void GerarItem(Vector3 posicao)
     {
         GameObject item = Instantiate(itemPrefabs[Random.Range(0, itemPrefabs.Length)], posicao, Quaternion.identity);
+
         LaItemCollision laItem = item.GetComponent<LaItemCollision>();
         if (laItem != null)
         {
@@ -175,6 +178,19 @@ public class ItemGenerator : MonoBehaviour
             laItem.pathLine = FindObjectOfType<LineRenderer>();
         }
 
-        Debug.Log("Item gerado na posição: " + posicao);
+        OlhoItemCollision olhoItem = item.GetComponent<OlhoItemCollision>();
+        if (olhoItem != null)
+        {
+            olhoItem.lightToDisable = GameObject.FindWithTag("pivotCamera").GetComponentInChildren<Light2D>();
+        }
+    }
+
+    // Função para calcular a chance de gerar um item com base na label
+    float CalcularChanceDeGerar(int label)
+    {
+        // 50% para noob (0), 30% para pro (1)
+        float chance = (label == 0) ? 0.5f : 0.3f;
+
+        return chance;
     }
 }
