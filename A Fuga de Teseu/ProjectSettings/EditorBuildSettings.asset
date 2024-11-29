@@ -21,12 +21,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Labirinto-03.unity
     guid: 30e8f78d3ecf4394cbecd25637703a4d
   - enabled: 1
+    path: Assets/Scenes/GameOverScene.unity
+    guid: 422aeb18f706284489919a27732e3d4b
+  - enabled: 1
     path: Assets/Scenes/Labirinto-04.unity
     guid: 1a64af1efe388a543aee0a9b35570e82
   - enabled: 1
     path: Assets/Scenes/Final-Corredor.unity
     guid: b55ade779a29afd43b2f3ae401e84c25
   - enabled: 1
-    path: Assets/Scenes/Final-Saida.unity
+    path: Assets/Scenes/WinScene.unity
     guid: 3405a54dc3a073240833cdf2154d91a6
   m_configObjects: {}
