@@ -17,7 +17,7 @@ public class PlayerNumbers : MonoBehaviour
 
     // Caminho do arquivo CSV
     static private string projectPath = Application.dataPath;
-    public string testFilePath = projectPath + "/Scripts/dados_player.csv"; // Caminho atualizado
+    public string testFilePath = Application.streamingAssetsPath + @"/dados_player.csv"; // Caminho atualizado
 
     // Variáveis públicas para exibir os dados
     public float tempoPercorrido;

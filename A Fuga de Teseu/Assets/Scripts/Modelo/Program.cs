@@ -7,9 +7,9 @@ using System.Linq;
 
 public class LogisticRegression : MonoBehaviour
 {
-    static private string projectPath = Application.dataPath;
-    private string trainFilePath = projectPath + @"\Scripts\dados.csv";  
-    public string testFilePath = projectPath + @"\Scripts\dados_player.csv"; 
+    static private string projectPath = Application.streamingAssetsPath;
+    private string trainFilePath = Application.streamingAssetsPath + @"\dados.csv";  
+    public string testFilePath = Application.streamingAssetsPath + @"\dados_player.csv"; 
 
     private static LogisticRegressionModel model;  // Tornando o modelo estático para persistir durante a execução
     private static double[] minValues;              // Também tornando os valores de normalização estáticos
