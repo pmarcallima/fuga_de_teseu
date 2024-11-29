@@ -307,8 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529faf2d3f1206f41845b62b5903507f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testFilePath: C:/Users/GABRIEL/Documents/CC/QUARTA PERIODO/TI4/FUGA_REP/fuga_de_teseu/A
-    Fuga de Teseu/Assets\Scripts\dados_player.csv
+ 
 --- !u!1 &86866758
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +917,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &324797207
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2267,7 +2266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5cc3926cf2f9884998551bc03e76c66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volumeSlider: {fileID: 0}
+  volumeSlider: {fileID: 1297498462}
 --- !u!1 &1481024239
 GameObject:
   m_ObjectHideFlags: 0
