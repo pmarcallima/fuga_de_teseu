@@ -6,11 +6,11 @@ using UnityEngine.Rendering.Universal;
 
 public class LaItemCollision : MonoBehaviour
 {
-    public Light2D lightToDisable; // Luz da lâmpada
-    public Transform exitPoint; // Ponto de saída do labirinto (a saída)
+    public Light2D lightToDisable; // Luz da lï¿½mpada
+    public Transform exitPoint; // Ponto de saï¿½da do labirinto (a saï¿½da)
     public LineRenderer pathLine; // Linha para desenhar o caminho
-    private Seeker seeker; // Referência ao Seeker do A* Pathfinding
-    private AIPath aiPath; // Referência ao AIPath do A* Pathfinding Project
+    private Seeker seeker; // Referï¿½ncia ao Seeker do A* Pathfinding
+    private AIPath aiPath; // Referï¿½ncia ao AIPath do A* Pathfinding Project
 
     void Start()
     {
@@ -19,28 +19,29 @@ public class LaItemCollision : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D collision)
+{
+if (collision.gameObject.tag == "Teseu")
+{
+    if (lightToDisable != null)
     {
-        if (collision.gameObject.tag == "Teseu")
-        {
-            if (lightToDisable != null)
-            {
-                lightToDisable.enabled = false;
-                Invoke("DisableLightTemporarily", 2f);
-            }
-
-            // Iniciar o cálculo do caminho até a saída
-            seeker.StartPath(collision.transform.position, exitPoint.position, OnPathComplete);
-
-            gameObject.SetActive(false); // Desativar o item após uso
-        }
+        lightToDisable.enabled = false;
+        Invoke("DisableLightTemporarily", 2f);
     }
+
+    // Iniciar o cÃ¡lculo do caminho atÃ© a saÃ­da
+    seeker.StartPath(collision.transform.position, exitPoint.position, OnPathComplete);
+
+    
+    gameObject.SetActive(false); 
+}
+}
 
     void DisableLightTemporarily()
     {
         lightToDisable.enabled = true;
     }
 
-    // Callback que será chamado quando o caminho for calculado
+    // Callback que serï¿½ chamado quando o caminho for calculado
     void OnPathComplete(Path p)
     {
         if (!p.error)
@@ -49,7 +50,7 @@ public class LaItemCollision : MonoBehaviour
         }
     }
 
-    // Função para mostrar o caminho com uma linha ou outro indicador visual
+    // Funï¿½ï¿½o para mostrar o caminho com uma linha ou outro indicador visual
     void ShowPath(List<Vector3> path)
     {
         if (pathLine != null && path.Count > 0)
@@ -57,7 +58,7 @@ public class LaItemCollision : MonoBehaviour
             pathLine.positionCount = path.Count;
             pathLine.SetPositions(path.ToArray());
 
-            // Desativar a linha após 5 segundos, por exemplo
+            // Desativar a linha apï¿½s 5 segundos, por exemplo
             Invoke("ClearPath", 5f);
         }
     }
