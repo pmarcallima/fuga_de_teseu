@@ -10,6 +10,7 @@ TagManager:
   - Coin
   - Floor
   - Exit
+  - pivotCamera
   layers:
   - Default
   - TransparentFX
