@@ -16,6 +16,7 @@ Alunos integrantes da equipe:
 - Pedro Ribeiro Maia
 - Fábio Antônio Caldeira Andrade
 - João Lucas Azeredo Coutinho Curi
+- Guilherme Gomes de Brites
 
 ## Professores
 
