@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;  // Necessário para usar StreamWriter
+using System.IO; // Necessário para usar StreamWriter
 using UnityEngine;
 
 public class PlayerNumbers : MonoBehaviour
@@ -20,13 +20,13 @@ public class PlayerNumbers : MonoBehaviour
     public string testFilePath = Application.streamingAssetsPath + @"/dados_player.csv"; // Caminho atualizado
 
     // Variáveis públicas para exibir os dados
-    public float tempoPercorrido;
+    public int tempoPercorrido; // Tempo total em segundos
     public int quantidadeItensPegos;
     public bool jogadorVenceu;
 
     void Start()
     {
-        tempoInicio = Time.time;
+        tempoInicio = Time.time; // Marca o início da contagem de tempo
         itensPegos = 0;
         venceu = false;
         jogador = GameObject.FindWithTag("Teseu").transform; // Ou ajuste para o nome correto do jogador
@@ -58,10 +58,10 @@ public class PlayerNumbers : MonoBehaviour
             ChecarVitoria();
         }
 
-        // Atualiza os dados conforme o jogador coleta itens
-        if (Input.GetKeyDown(KeyCode.I)) // Simula a coleta de um item
+        // Simula a coleta de um item para teste
+        if (Input.GetKeyDown(KeyCode.I)) // Pressione "I" para simular a coleta de item
         {
-            ColetarItem();  // A função agora apenas incrementa o contador de itens
+            ColetarItem(); // Incrementa o contador de itens
         }
     }
 
@@ -76,16 +76,16 @@ public class PlayerNumbers : MonoBehaviour
     }
 
     // Método para finalizar a fase (vitória ou derrota)
-    void FinalizarFase(bool venceu)
+    public void FinalizarFase(bool venceu)
     {
         if (this.venceu) return; // Evita que a fase seja finalizada mais de uma vez
 
         tempoFinal = Time.time; // Registra o tempo ao final da fase
-        tempoPercorrido = tempoFinal - tempoInicio; // Calcula o tempo percorrido
+        tempoPercorrido = Mathf.RoundToInt(tempoFinal - tempoInicio);
         jogadorVenceu = venceu; // Define se o jogador venceu ou perdeu
 
         // Exibe ou armazena os dados conforme necessário
-        Debug.Log("Tempo Percorrido: " + tempoPercorrido + " segundos.");
+        Debug.Log("Tempo Percorrido: " + tempoPercorrido.ToString("F2") + " segundos.");
         Debug.Log("Itens Coletados: " + itensPegos);
         Debug.Log("Vitória: " + (venceu ? "Sim" : "Não"));
 
@@ -94,10 +94,10 @@ public class PlayerNumbers : MonoBehaviour
     }
 
     // Método para coletar um item
-    void ColetarItem()
+    public void ColetarItem()
     {
         itensPegos++;
-        Debug.Log("Item Coletado!");
+        Debug.Log($"Item coletado! Total agora: {itensPegos}");
     }
 
     // Método para sobrescrever os dados no arquivo CSV mantendo o cabeçalho

@@ -17,8 +17,16 @@ void OnCollisionEnter2D(Collision2D collision)
 // Coroutine para gravar dados antes de mudar de cena
 IEnumerator GravarDadosAntesDeMudarDeFase()
 {
-    // Cria uma instância do script PlayerNumbers
-    PlayerNumbers playerNumbers = gameObject.AddComponent<PlayerNumbers>();
+     GameObject statsObject = GameObject.FindWithTag("Stats");
+
+    if (statsObject == null)
+    {
+        Debug.LogError("GameObject com a tag 'Stats' não encontrado. Certifique-se de que ele está na cena.");
+        yield break; // Encerra a coroutine para evitar mais erros
+    }
+
+    // Obtém o componente PlayerNumbers no GameObject "playerstats"
+    PlayerNumbers playerNumbers = statsObject.GetComponent<PlayerNumbers>();
 
     // Grava os dados do jogador no CSV
     playerNumbers.GravarDadosCSV();

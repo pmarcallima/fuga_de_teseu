@@ -307,8 +307,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529faf2d3f1206f41845b62b5903507f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testFilePath: C:/Users/Pedro/Documents/PUC/TI4/Fuga de Teseu/fuga_de_teseu/A Fuga
-    de Teseu/Assets/StreamingAssets\dados_player.csv
 --- !u!1 &86866758
 GameObject:
   m_ObjectHideFlags: 0

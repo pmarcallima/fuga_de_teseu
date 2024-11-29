@@ -12,6 +12,7 @@ TagManager:
   - Exit
   - pivotCamera
   - WIN
+  - Stats
   layers:
   - Default
   - TransparentFX

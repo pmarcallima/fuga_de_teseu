@@ -11,6 +11,7 @@ public class LaItemCollision : MonoBehaviour
     public LineRenderer pathLine; // Linha para desenhar o caminho
     private Seeker seeker; // Refer�ncia ao Seeker do A* Pathfinding
     private AIPath aiPath; // Refer�ncia ao AIPath do A* Pathfinding Project
+    public GameObject player;
 
     void Start()
     {
@@ -30,6 +31,19 @@ if (collision.gameObject.tag == "Teseu")
 
     // Iniciar o cálculo do caminho até a saída
     seeker.StartPath(collision.transform.position, exitPoint.position, OnPathComplete);
+       player = GameObject.FindWithTag("Stats");
+ 	PlayerNumbers playerNumbers = player.GetComponent<PlayerNumbers>();
+
+        if (playerNumbers != null)
+        {
+            // Chama o método ColetarItem do script PlayerNumbers
+            playerNumbers.ColetarItem();
+            Debug.Log("Item atualizado no PlayerNumbers!");
+        }
+        else
+        {
+            Debug.LogError("PlayerNumbers não encontrado no GameObject especificado!");
+        }
 
     
     gameObject.SetActive(false); 
